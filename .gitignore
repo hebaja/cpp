@@ -1,3 +1,4 @@
 *.o
+*.out
 package.json
 00/ex00/megaphone
