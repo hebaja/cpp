@@ -17,7 +17,7 @@ int	main(int argc, char **argv)
 			i = -1;
 			str = *argv;
 			while (str[++i])
-				std::cout << static_cast<char>(toupper(str[i]));
+				std::cout << (char)(toupper(str[i]));
 			argv++;
 		}
 	}
