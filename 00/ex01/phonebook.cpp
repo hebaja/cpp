@@ -7,49 +7,50 @@ using namespace std;
 
 class	Contact
 {
-	int	index;
 	std::string	first_name;
 	std::string	last_name;
 	std::string	nickname;
 	std::string	phone_number;
 	std::string	darkest_secret;
+	Contact	*next;
 	public:
-		Contact(){};
-		Contact(std::string first_name, std::string last_name, std::string nickname, std::string phone_number, std::string darkest_secret) {
-			this->first_name = first_name;
-			this->last_name = last_name;
-			this->nickname = nickname;
-			this->phone_number = phone_number;
-			this->darkest_secret = darkest_secret;
-		};
-		int	getIndex()
-		{
-			return this->index;
-		};
-		std::string getFirstName()
-		{
-			return this->first_name;
-		};
-		std::string getLastName()
-		{
-			return this->last_name;
-		};
-		std::string getNickname()
-		{
-			return this->nickname;
-		};
-		std::string getPhoneNumber()
-		{
-			return this->phone_number;
-		};
-		std::string getDarkestSecret()
-		{
-			return this->darkest_secret;
-		};
-		void	set_index(int index)
-		{
-			this->index = index;
-		}
+	Contact(){};
+	Contact(std::string first_name, std::string last_name, std::string nickname, std::string phone_number, std::string darkest_secret) {
+		this->first_name = first_name;
+		this->last_name = last_name;
+		this->nickname = nickname;
+		this->phone_number = phone_number;
+		this->darkest_secret = darkest_secret;
+		this->next = NULL;
+	};
+	std::string getFirstName()
+	{
+		return this->first_name;
+	};
+	std::string getLastName()
+	{
+		return this->last_name;
+	};
+	std::string getNickname()
+	{
+		return this->nickname;
+	};
+	std::string getPhoneNumber()
+	{
+		return this->phone_number;
+	};
+	std::string getDarkestSecret()
+	{
+		return this->darkest_secret;
+	};
+	Contact	*getNext()
+	{
+		return this->next;
+	}
+	void	setNext(Contact *contact)
+	{
+		this->next = contact;
+	}
 };
 
 void	print_fit_info(std::string info)
@@ -65,11 +66,67 @@ void	print_fit_info(std::string info)
 		std::cout << setw(10) << info << "|";
 }
 
+void	addContact(Contact **contact_lst, Contact *new_contact)
+{
+	if (*contact_lst && new_contact)
+	{
+		new_contact->setNext(*contact_lst);
+		*contact_lst = new_contact;
+		return ;
+	}
+	if (new_contact)
+		*contact_lst = new_contact;
+}
+
+void	print_all(Contact **contact_lst)
+{
+	Contact	*contact;
+	int		index;
+
+	contact = *contact_lst;
+	index = 0;
+	while (contact)
+	{
+		std::cout << setw(10) << index << "|";
+		print_fit_info(contact->getFirstName());
+		print_fit_info(contact->getLastName());
+		print_fit_info(contact->getNickname());
+		print_fit_info(contact->getPhoneNumber());
+		std::cout << std::endl;
+		contact = contact->getNext();
+		index++;
+	}
+}
+
+void	print_one(Contact **contact_lst, int index)
+{
+	Contact	*contact;
+	int	count;
+
+	contact = *contact_lst;
+	count = 0;
+	while (contact)
+	{
+		if (count == index)
+		{
+			std::cout << contact->getFirstName() << std::endl;
+			std::cout << contact->getLastName() << std::endl;
+			std::cout << contact->getNickname() << std::endl;
+			std::cout << contact->getPhoneNumber() << std::endl;
+			std::cout << contact->getDarkestSecret() << std::endl;
+			return ;
+		}
+		contact = contact->getNext();
+		count++;
+	}
+	std::cout << "Contact not found" << std::endl;
+}
+
 class	Phonebook
 {
 	int		contacts_quantity;
 	int		index;
-	Contact contacts[8];
+	Contact *contact_lst;
 
 	public:
 	Phonebook(int contacts_quantity)
@@ -78,42 +135,22 @@ class	Phonebook
 		this->contacts_quantity = 0;
 		this->index = 0;
 	};
-	void	addContact(Contact contact)
+	void	add(std::string first_name, std::string last_name, std::string nickname, std::string phone_number, std::string darkest_secret)
 	{
-		contact.set_index(this->index);
-		this->contacts[this->index] = contact;
-		contacts_quantity++;
-		this->index++;
+		Contact *contact = new Contact(first_name, last_name, nickname, phone_number, darkest_secret);
+		addContact(&this->contact_lst, contact);
 	}
-	Contact*	getContacts()
+	Contact	**getContacts()
 	{
-		return this->contacts;
+		return &this->contact_lst;
 	}
 	void	print_all_contacts()
 	{
-		for (int i = 0; i < this->contacts_quantity; i++) {
-			std::cout << setw(10) << this->getContacts()[i].getIndex() << "|";
-			print_fit_info(this->getContacts()[i].getFirstName());
-			print_fit_info(this->getContacts()[i].getLastName());
-			print_fit_info(this->getContacts()[i].getNickname());
-			print_fit_info(this->getContacts()[i].getPhoneNumber());
-			std::cout << std::endl;
-		}
+		print_all(this->getContacts());
 	}
 	void	print_contact(int index)
 	{
-		for (int i = 0; i < this->contacts_quantity; i++) {
-			if (index == this->getContacts()[i].getIndex())
-			{
-				std::cout << this->getContacts()[i].getFirstName() << std::endl;
-				std::cout << this->getContacts()[i].getLastName() << std::endl;
-				std::cout << this->getContacts()[i].getNickname() << std::endl;
-				std::cout << this->getContacts()[i].getPhoneNumber() << std::endl;
-				std::cout << this->getContacts()[i].getDarkestSecret() << std::endl;
-				return ;
-			}
-		}
-		std::cout << "Contact not found" << std::endl;
+		print_one(this->getContacts(), index);
 	}
 };
 
@@ -128,7 +165,8 @@ void	add_many(Phonebook *phonebook)
 		std::string name = base_name + suffix;
 		std::string nick = base_nick + suffix;
 		Contact contact(name, "Last name", nick, "555 5555", "dark");
-		phonebook->addContact(contact);
+		// phonebook->addContact(contact);
+		addContact(phonebook->getContacts(), &contact);
 	}
 }
 
@@ -179,8 +217,8 @@ int	main()
 {
 	std::string	command;
 	Phonebook	phonebook(8);
+	Contact		contact;
 
-	add_many(&phonebook);
 	show_prompt(&command);
 	while (command.compare("EXIT") != 0)
 	{
@@ -206,8 +244,7 @@ int	main()
 			std::cout << "Input contact darkest secret: ";
 			while (get_data(&darkest_secret) == 0)
 				std::cout << "Input contact darkest secret: ";
-			Contact contact(first_name, last_name, nickname, phone_number, darkest_secret);
-			phonebook.addContact(contact);
+			phonebook.add(first_name, last_name, nickname, phone_number, darkest_secret);
 		}
 		else if (command.compare("SEARCH") == 0)
 		{
