@@ -11,10 +11,8 @@ class	Phonebook
 	int		contacts_quantity;
 
 	public:
-	Phonebook(){};
-	Phonebook(int contacts_quantity)
+	Phonebook()
 	{
-		this->contacts_quantity = contacts_quantity;
 		this->contacts_quantity = 0;
 		this->index = 0;
 	};
@@ -27,6 +25,7 @@ class	Phonebook
 	Contact*	getContacts();
 	int		getIndex();
 	int		getContactsQuantity();
-	void	setIndex(int index);
+	void	incrementContactsQuantity();
+	void	incrementIndex();
 	void	printContact(int index);
 };

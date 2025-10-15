@@ -11,7 +11,7 @@ void	Phonebook::add_many()
 	std::string	base_name = "Contact_";
 	std::string	base_nick = "con_";
 
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 8; i++)
 	{
 		char	suffix = 'a' + i;
 		std::string name = base_name + suffix;
@@ -71,25 +71,43 @@ void	Phonebook::print_fit_info(std::string info)
 		std::cout << setw(10) << info << "|";
 }
 
+void	Phonebook::incrementContactsQuantity()
+{
+	this->contacts_quantity++;
+}
+
+void	Phonebook::incrementIndex()
+{
+	this->index++;
+}
+
 void	Phonebook::addContact(Contact *contact)
 {
+	int	curr_index;
+
+	curr_index = this->index % 8;
+
+	contact->set_index(curr_index);
+
+	this->getContacts()[contact->getIndex()] = *contact;
 	if (this->getContactsQuantity() < 8)
-		this->setIndex(this->getIndex() + 1);
-	else
-		this->setIndex(0);
-	contact->set_index(this->getIndex());
-	this->getContacts()[this->getIndex()] = *contact;
-	this->contacts_quantity++;
+		this->incrementContactsQuantity();
+	this->incrementIndex();
 }
 
 void	Phonebook::printContact(int index)
 {
-	if (index <= this->getContactsQuantity())
+	if (index >= 0 && index <= 7)
 	{
-		this->getContacts()[index].print();
+		if (index <= this->getContactsQuantity())
+		{
+			this->getContacts()[index].print();
+		}
+		else
+			std::cout << "Contact not found" << std::endl;
 	}
 	else
-		std::cout << "Contact not found" << std::endl;
+		std::cout << "Index out of bounds" << std::endl;
 }
 
 void	Phonebook::print_all_contacts()
@@ -117,9 +135,4 @@ int	Phonebook::getIndex()
 int	Phonebook::getContactsQuantity()
 {
 	return this->contacts_quantity;
-}
-
-void	Phonebook::setIndex(int index)
-{
-	this->index = index;
 }

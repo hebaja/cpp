@@ -2,7 +2,6 @@
 #include "Contact.hpp"
 #include "Phonebook.hpp"
 
-// #include <cctype>
 void	show_prompt(std::string *command)
 {
 	std::cout << "Input a command: ADD | SEARCH | EXIT: " ;
@@ -12,7 +11,7 @@ void	show_prompt(std::string *command)
 int	main()
 {
 	std::string	command;
-	Phonebook	phonebook(8);
+	Phonebook	phonebook;
 
 	phonebook.add_many();
 	show_prompt(&command);

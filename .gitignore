@@ -1,4 +1,5 @@
 *.o
 *.out
 package.json
-00/ex00/megaphone
+ex00/megaphone
+ex01/phonebook
