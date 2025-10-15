@@ -2,10 +2,29 @@
 #include "Contact.hpp"
 #include "Phonebook.hpp"
 
-void	show_prompt(std::string *command)
+bool	showPrompt(std::string *command)
 {
 	std::cout << "Input a command: ADD | SEARCH | EXIT: " ;
-	std::getline(std::cin, *command);
+	if (!std::getline(std::cin, *command))
+		return false;
+	return true;
+}
+
+int	fillData(std::string msg, Phonebook *phonebook, std::string *data)
+{
+	int	flag;
+
+	std::cout << msg;
+	flag = phonebook->getData(data);
+	if (flag >= 0)
+	{
+		if (flag == 0)
+		{
+			while (phonebook->getData(data) == 0)
+				std::cout << msg;
+		}
+	}
+	return (flag);
 }
 
 int	main()
@@ -13,52 +32,51 @@ int	main()
 	std::string	command;
 	Phonebook	phonebook;
 
-	phonebook.add_many();
-	show_prompt(&command);
-	while (command.compare("EXIT") != 0)
+	phonebook.addMany();
+	if (showPrompt(&command))
 	{
-		if (command.compare("ADD") == 0)
+		while (command.compare("EXIT") != 0)
 		{
-			std::string	first_name;
-			std::string	last_name;
-			std::string	nickname;
-			std::string	phone_number;
-			std::string	darkest_secret;
-			std::cout << "Input contact first name: ";
-			while (phonebook.get_data(&first_name) == 0)
-				std::cout << "Input contact first name: ";
-			std::cout << "Input contact last name: ";
-			while (phonebook.get_data(&last_name) == 0)
-				std::cout << "Input contact last name: ";
-			std::cout << "Input contact nickname: ";
-			while (phonebook.get_data(&nickname) == 0)
-				std::cout << "Input contact nickname: ";
-			std::cout << "Input contact phone number: ";
-			while (phonebook.get_data(&phone_number) == 0)
-				std::cout << "Input contact phone number: ";
-			std::cout << "Input contact darkest secret: ";
-			while (phonebook.get_data(&darkest_secret) == 0)
-				std::cout << "Input contact darkest secret: ";
-			Contact contact(first_name, last_name, nickname, phone_number, darkest_secret);
-			phonebook.addContact(&contact);
-		}
-		else if (command.compare("SEARCH") == 0)
-		{
-			std::string	chosen_index;
-			int			num_index;
-
-			phonebook.print_all_contacts();
-			std::cout << "Input contact's index: ";
-			std::getline(std::cin, chosen_index);
-			if (phonebook.is_valid_index(chosen_index))
+			if (command.compare("ADD") == 0)
 			{
-				num_index = std::stoi(chosen_index);
-				phonebook.printContact(num_index);
+				std::string	firstName;
+				std::string	lastName;
+				std::string	nickname;
+				std::string	phoneNumber;
+				std::string	darkestSecret;
+				if (fillData("Input contact first name: ", &phonebook, &firstName) == -1)
+					break ;
+				if (fillData("Input contact last name: ", &phonebook, &lastName) == -1)
+					break ;
+				if (fillData("Input contact nickname: ", &phonebook, &nickname) == -1)
+					break ;
+				if (fillData("Input contact phone number: ", &phonebook, &phoneNumber) == -1)
+					break ;
+				if (fillData("Input contact darkest secret: ", &phonebook, &darkestSecret) == -1)
+					break ;
+				Contact contact(firstName, lastName, nickname, phoneNumber, darkestSecret);
+				phonebook.addContact(&contact);
 			}
+			else if (command.compare("SEARCH") == 0)
+			{
+				std::string	chosen_index;
+				int			num_index;
+
+				phonebook.printAllContacts();
+				std::cout << "Input contact's index: ";
+				std::getline(std::cin, chosen_index);
+				if (phonebook.isValidIndex(chosen_index))
+				{
+					num_index = std::stoi(chosen_index);
+					phonebook.printContact(num_index);
+				}
+			}
+			else
+				std::cout << "Invalid command" << std::endl;
+			command.clear();
+			if (!showPrompt(&command))
+				break ;
 		}
-		else
-			std::cout << "Invalid command" << std::endl;
-		show_prompt(&command);
 	}
 	return (0);
 }

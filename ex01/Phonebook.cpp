@@ -6,7 +6,56 @@
 
 using namespace std;
 
-void	Phonebook::add_many()
+Phonebook::Phonebook()
+{
+	this->contacts_quantity = 0;
+	this->index = 0;
+};
+
+int	Phonebook::getData(std::string *data)
+{
+	int	flag;
+
+	flag = 0;
+	if (std::getline(std::cin, *data))
+	{
+		if (data->empty())
+		{
+			std::cout << "Field can't be empty" << std::endl;
+			return (0);
+		}
+		for (char c : *data)
+		{
+			if (!std::isspace(c))
+			{
+				flag = 1;
+				break ;
+			}
+		}
+		if (!flag)
+			std::cout << "Field can't be empty" << std::endl;
+	}
+	else
+		return (-1);
+	return (flag);
+}
+
+Contact*	Phonebook::getContacts()
+{
+	return this->contacts;
+}
+
+int	Phonebook::getIndex()
+{
+	return this->index;
+}
+
+int	Phonebook::getContactsQuantity()
+{
+	return this->contacts_quantity;
+}
+
+void	Phonebook::addMany()
 {
 	std::string	base_name = "Contact_";
 	std::string	base_nick = "con_";
@@ -21,31 +70,7 @@ void	Phonebook::add_many()
 	}
 }
 
-int	Phonebook::get_data(std::string *data)
-{
-	int	flag;
-
-	flag = 0;
-	std::getline(std::cin, *data);
-	if (data->empty())
-	{
-		std::cout << "Field can't be empty" << std::endl;
-		return (0);
-	}
-	for (char c : *data)
-	{
-		if (!std::isspace(c))
-		{
-			flag = 1;
-			break ;
-		}
-	}
-	if (!flag)
-		std::cout << "Field can't be empty" << std::endl;
-	return (flag);
-}
-			
-int	Phonebook::is_valid_index(std::string chosen_index)
+int	Phonebook::isValidIndex(std::string chosen_index)
 {
 	for (char c : chosen_index)
 	{
@@ -58,7 +83,7 @@ int	Phonebook::is_valid_index(std::string chosen_index)
 	return (1);
 }
 
-void	Phonebook::print_fit_info(std::string info)
+void	Phonebook::printFitInfo(std::string info)
 {
 	if (info.size() > 10)
 	{
@@ -86,9 +111,7 @@ void	Phonebook::addContact(Contact *contact)
 	int	curr_index;
 
 	curr_index = this->index % 8;
-
-	contact->set_index(curr_index);
-
+	contact->setIndex(curr_index);
 	this->getContacts()[contact->getIndex()] = *contact;
 	if (this->getContactsQuantity() < 8)
 		this->incrementContactsQuantity();
@@ -110,29 +133,14 @@ void	Phonebook::printContact(int index)
 		std::cout << "Index out of bounds" << std::endl;
 }
 
-void	Phonebook::print_all_contacts()
+void	Phonebook::printAllContacts()
 {
 	for (int i = 0; i < this->contacts_quantity; i++) {
 		std::cout << setw(10) << this->getContacts()[i].getIndex() << "|";
-		print_fit_info(this->getContacts()[i].getFirstName());
-		print_fit_info(this->getContacts()[i].getLastName());
-		print_fit_info(this->getContacts()[i].getNickname());
-		print_fit_info(this->getContacts()[i].getPhoneNumber());
+		printFitInfo(this->getContacts()[i].getFirstName());
+		printFitInfo(this->getContacts()[i].getLastName());
+		printFitInfo(this->getContacts()[i].getNickname());
+		printFitInfo(this->getContacts()[i].getPhoneNumber());
 		std::cout << std::endl;
 	}
-}
-
-Contact*	Phonebook::getContacts()
-{
-	return this->contacts;
-}
-
-int	Phonebook::getIndex()
-{
-	return this->index;
-}
-
-int	Phonebook::getContactsQuantity()
-{
-	return this->contacts_quantity;
 }
