@@ -2,16 +2,16 @@ CXX = c++
 FLAGS = -Wall -Wextra -Werror
 NAME = megaphone
 SRC = megaphone.cpp
-SRC_DIR = src
-SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
-OBJS = $(SRC:.cpp=.o)
+SRC_DIR = .
+SRCS=$(addprefix $(SRC_DIR)/, $(SRC))
+OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJS) 
-	$(CXX) $(FLAGS) $(SRC) -o $(NAME)
+$(NAME): $(OBJS)
+	$(CXX) $(FLAGS) $(OBJS) -o $(NAME)
 
-.c.o:
+.cpp.o:
 	$(CXX) $(FLAGS) -c $< -o $@
 
 clean:

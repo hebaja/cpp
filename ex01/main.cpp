@@ -1,6 +1,10 @@
 #include <iostream>
 #include "Contact.hpp"
-#include "Phonebook.hpp"
+#include "PhoneBook.hpp"
+
+#ifndef ADD
+# define ADD 0
+#endif
 
 bool	showPrompt(std::string *command)
 {
@@ -27,12 +31,14 @@ int	fillData(std::string msg, Phonebook *phonebook, std::string *data)
 	return (flag);
 }
 
-int	main()
+int	main(int argc, char **argv)
 {
 	std::string	command;
 	Phonebook	phonebook;
 
-	phonebook.addMany();
+	(void)argv;
+	if (argc > 1)
+		phonebook.addMany();
 	if (showPrompt(&command))
 	{
 		while (command.compare("EXIT") != 0)
@@ -64,12 +70,16 @@ int	main()
 
 				phonebook.printAllContacts();
 				std::cout << "Input contact's index: ";
-				std::getline(std::cin, chosen_index);
-				if (phonebook.isValidIndex(chosen_index))
+				if (std::getline(std::cin, chosen_index))
 				{
-					num_index = std::stoi(chosen_index);
-					phonebook.printContact(num_index);
+					if (phonebook.isValidIndex(chosen_index))
+					{
+						num_index = std::stoi(chosen_index);
+						phonebook.printContact(num_index);
+					}
 				}
+				else
+					break ;
 			}
 			else
 				std::cout << "Invalid command" << std::endl;

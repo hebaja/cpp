@@ -1,18 +1,18 @@
 CXX = c++
 FLAGS = -Wall -Wextra -Werror
-NAME = phonebook
-SRC = main.cpp Contact.cpp Phonebook.cpp
-SRC_DIR = src
-SRCS = $(addprefix $(SRC_DIR)/, $(SRC))
-OBJS = $(SRC:.cpp=.o)
+NAME = PhoneBook
+SRC = main.cpp Contact.cpp PhoneBook.cpp
+SRC_DIR = .
+SRCS=$(addprefix $(SRC_DIR)/, $(SRC))
+OBJS = $(SRCS:.cpp=.o)
 
 all: $(NAME)
 
 $(NAME): $(OBJS) 
-	$(CXX) $(FLAGS) $(SRC) -o $(NAME) -g
+	$(CXX) $(FLAGS) $(OBJS) -o $(NAME)
 
-.c.o:
-	$(CXX) $(FLAGS) -c $< -o $@ -g
+.cpp.o:
+	$(CXX) $(FLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(OBJS)

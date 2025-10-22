@@ -1,8 +1,6 @@
 #include <iostream>
 #include "Contact.hpp"
 
-using namespace std;
-
 Contact::Contact(){}
 
 Contact::Contact(std::string first_name, 

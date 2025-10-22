@@ -2,9 +2,7 @@
 #include <string>
 #include <iomanip>
 #include <cctype>
-#include "Phonebook.hpp"
-
-using namespace std;
+#include "PhoneBook.hpp"
 
 Phonebook::Phonebook()
 {
@@ -90,10 +88,10 @@ void	Phonebook::printFitInfo(std::string info)
 		std::string tmp = info;
 		tmp.resize(9);
 		tmp.shrink_to_fit();
-		std::cout << setw(9) << tmp << "." << "|";
+		std::cout << std::setw(9) << tmp << "." << "|";
 	}
 	else
-		std::cout << setw(10) << info << "|";
+		std::cout << std::setw(10) << info << "|";
 }
 
 void	Phonebook::incrementContactsQuantity()
@@ -122,7 +120,7 @@ void	Phonebook::printContact(int index)
 {
 	if (index >= 0 && index <= 7)
 	{
-		if (index <= this->getContactsQuantity())
+		if (index <= this->getContactsQuantity() && this->getContactsQuantity() != 0)
 		{
 			this->getContacts()[index].print();
 		}
@@ -136,7 +134,7 @@ void	Phonebook::printContact(int index)
 void	Phonebook::printAllContacts()
 {
 	for (int i = 0; i < this->contacts_quantity; i++) {
-		std::cout << setw(10) << this->getContacts()[i].getIndex() << "|";
+		std::cout << std::setw(10) << this->getContacts()[i].getIndex() << "|";
 		printFitInfo(this->getContacts()[i].getFirstName());
 		printFitInfo(this->getContacts()[i].getLastName());
 		printFitInfo(this->getContacts()[i].getNickname());
