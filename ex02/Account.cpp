@@ -3,21 +3,40 @@
 #include <chrono>
 #include <iomanip>
 
+typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
+
 int	Account::_nbAccounts = 0;
 int	Account::_totalAmount = 0;
 int	Account::_totalNbDeposits = 0;
 int	Account::_totalNbWithdrawals = 0;
 
-typedef std::chrono::time_point<std::chrono::system_clock> TimePoint;
-
-void	Account::_displayTimestamp(void)
+/* constructors start */
+Account::Account(int initial_deposit)
 {
-	TimePoint timePoint = std::chrono::system_clock::now();
-	std::time_t now = std::chrono::system_clock::to_time_t(timePoint);
-	std::cout << std::put_time(std::localtime(&now), "[%Y%m%d_%H%M%S]") << " ";
+	this->_amount = initial_deposit;
+	Account::_totalAmount += this->_amount;
+	this->_accountIndex = _nbAccounts;
+	this->_nbDeposits = 0;
+	this->_nbWithdrawals = 0;
+	Account::_nbAccounts++;
+	Account::_displayTimestamp();
+	std::cout << "index:" << this->_accountIndex <<
+		";amount:" << this->checkAmount() <<
+		";created" <<
+		std::endl;
 }
 
-/* public start*/
+Account::~Account(void)
+{
+	Account::_displayTimestamp();
+	std::cout << "index:" << this->_accountIndex <<
+		";amount:" << this->checkAmount() <<
+		";closed" <<
+		std::endl;
+}
+/* constructors end */
+
+/* public start */
 void	Account::makeDeposit(int deposit)
 {
 	int	p_amount;
@@ -70,9 +89,9 @@ void	Account::displayStatus(void) const
 		";withdrawals:" << this->_nbWithdrawals <<
 		std::endl;
 }
-/* public end*/
+/* public end */
 	
-/* static public start*/
+/* static public start */
 int	Account::getNbAccounts(void)
 {
 	return (_nbAccounts);
@@ -104,27 +123,11 @@ void	Account::displayAccountsInfos(void)
 }
 /* static public end*/
 
-/* constructors */
-Account::Account(int initial_deposit)
+/* static start */
+void	Account::_displayTimestamp(void)
 {
-	this->_amount = initial_deposit;
-	Account::_totalAmount += this->_amount;
-	this->_accountIndex = _nbAccounts;
-	this->_nbDeposits = 0;
-	this->_nbWithdrawals = 0;
-	Account::_nbAccounts++;
-	Account::_displayTimestamp();
-	std::cout << "index:" << this->_accountIndex <<
-		";amount:" << this->checkAmount() <<
-		";created" <<
-		std::endl;
+	TimePoint timePoint = std::chrono::system_clock::now();
+	std::time_t now = std::chrono::system_clock::to_time_t(timePoint);
+	std::cout << std::put_time(std::localtime(&now), "[%Y%m%d_%H%M%S]") << " ";
 }
-
-Account::~Account(void)
-{
-	Account::_displayTimestamp();
-	std::cout << "index:" << this->_accountIndex <<
-		";amount:" << this->checkAmount() <<
-		";closed" <<
-		std::endl;
-}
+/* static end */
